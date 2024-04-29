@@ -26,6 +26,7 @@ jobs:
             echo "Failed to install dependencies"
             exit 1
           fi
+      - run: npm install moment
       - run: node app.js
       - name: Run tests
         run: |
