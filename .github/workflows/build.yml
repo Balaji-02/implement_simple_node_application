@@ -1,11 +1,37 @@
-on: push
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  build-node:
+  build:
     runs-on: ubuntu-latest
-    container: node:16
+
     steps:
-      - run: node --version
-      - run: npm --version
-      - uses: actions/checkout@v3
-      - run: npm install
-      - run: node app.js
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # You can change the Node.js version if needed
+
+      - name: Install dependencies
+        run: |
+          npm install
+          if [ $? -ne 0 ]; then
+            echo "Failed to install dependencies"
+            exit 1
+          fi
+
+      - name: Run tests
+        run: |
+          npm test
+          if [ $? -ne 0 ]; then
+            echo "Tests failed"
+            exit 1
+          fi
+
+      # Add additional steps here such as building your application, deploying, etc.
